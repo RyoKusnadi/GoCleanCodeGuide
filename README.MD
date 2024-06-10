@@ -35,3 +35,60 @@ Also during your daily development, if you found out odd or messy code,  instead
 
 ## Clean Code In GO
 ### Naming
+Meaningful names describe the purpose and functionality of variables, functions, types, and packages. They help improve code readability, understandability, and maintainability by providing context and clarity to developers. easier for yourself and others to understand and work with the codebase In summary a meaningful will help us more easily understand what does the logic does or store, so does the bad name. 
+
+Here's the characteristics of the good names:
+- Not feel repetitive when they are used
+- Take the context into consideration
+- Not repeat concepts that are already clear
+
+In Go, we should know below convention regarding naming:
+
+<b>Underscores</b>  
+
+Names in Go should in general not contain underscores. There are three exceptions to this principle:
+- Package names that are only imported by generated code may contain underscores.
+- Test, Benchmark and Example function names within *_test.go files may include underscores.
+- Low-level libraries that interoperate with the operating system or cgo may reuse identifiers, as is done in syscall. This is expected to be very rare in most codebases.
+
+<b>Package Name</b>
+
+Package names should be short and contain only lowercase letters. A package name composed of multiple words should be left unbroken in all lowercase. For example, the package 'tabwriter' is not named tabWriter, TabWriter, or tab_writer.
+
+Avoid selecting package names that are likely to be shadowed by commonly used local variable names. For example, <b>usercount</b> is a better package name than <b>count</b>, since count is a commonly used variable name.
+
+Go package names should not have underscores. If you need to import a package that does have one in its name (usually from generated or third party code), it must be renamed at import time to a name that is suitable for use in Go code.
+
+An exception to this is that package names that are only imported by generated code may contain underscores. Specific examples include:
+- Using the _test suffix for an external test package, for example an integration test
+- Using the _test suffix for package-level documentation examples
+
+Avoid uninformative package names like util, utility, common, helper, and so on. Go package names should be related to what the package provides. Naming a package just util, helper, common or similar is usually a poor choice (it can be used as part of the name though). Uninformative names make the code harder to read, and if used too broadly they are liable to cause needless import conflicts.
+
+Instead, consider what the callsite will look like.
+```go
+// Good:
+db := spannertest.NewDatabaseFromFile(...)
+
+_, err := f.Seek(0, io.SeekStart)
+
+b := elliptic.Marshal(curve, x, y)
+```
+
+```go
+// Bad:
+db := test.NewDatabaseFromFile(...)
+
+_, err := f.Seek(0, common.SeekStart)
+
+b := helper.Marshal(curve, x, y)
+```
+
+
+
+When an imported package is renamed (ex: import foopb "path/to/foo_go_proto").the local name for the package must comply with the rules above, as the local name dictates how the symbols in the package are referenced in the file. If a given import is renamed in multiple files, particularly in the same or nearby packages, the same local name should be used wherever possible for consistency.
+
+
+
+
+ 
